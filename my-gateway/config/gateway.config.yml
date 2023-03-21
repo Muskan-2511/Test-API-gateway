@@ -1,0 +1,72 @@
+http:
+  port: 8080
+
+admin:
+  port: 8081
+  host: localhost
+  apiEndpoints:
+    - name: admin
+      host: localhost
+      paths: ["/*"]
+
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/api/**'
+  user:
+    host: localhost
+    paths:
+      - '/user/login'
+      - '/user/getVideo'
+
+serviceEndpoints:
+  mybackend:
+    url: 'http://localhost:3000'
+
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+
+pipelines:
+  user:
+    apiEndpoints:
+      - user
+    policies:
+      - basic-auth:
+          - action:
+              secret: 'youtube'
+              usernameField: 'email'
+              passwordField: 'password'
+      # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+      - key-auth:
+          - action:
+              key: 'myapikey'
+      - cors:
+          - action:
+              origin: "*"
+              methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
+              headers: "Authorization"
+
+      - log:
+          - action:
+              message: "User API Request: {req.method} {req.originalUrl} from IP {req.ip}"
+            format: combined
+            rotation:
+              type: size
+              size: 10MB
+              count: 10
+            fileName: logs/access.log
+      - proxy:
+          - action:
+              serviceEndpoint: mybackend
+              changeOrigin: true
+              passThrough: true
+              appendPath: true
+              setHeaders:
+                Authorization: '{req.headers.authorization}'

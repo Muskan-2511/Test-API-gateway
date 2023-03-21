@@ -1,0 +1,17 @@
+{
+  "name": "my-gateway",
+  "description": "Express Gateway Instance Bootstraped from Command Line",
+  "repository": {},
+  "license": "UNLICENSED",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "dependencies": {
+    "express-gateway": "^1.16.11",
+    "express-rate-limit": "^6.7.0",
+    "express-session": "^1.17.3",
+    "http-proxy-middleware": "^2.0.6",
+    "keycloak-connect": "^21.0.1",
+    "morgan": "^1.10.0"
+  }
+}
